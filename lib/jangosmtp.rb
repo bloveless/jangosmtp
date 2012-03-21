@@ -15,6 +15,9 @@ module Jangosmtp
       @auto_generate_plain = hash[:open_tracking] ||= true
     end
     
+    # Get a group if the group exists, otherwise create a group using a group name and return it's id
+    # group_name: group name that the user wants to get the id for, should only contain alphanumeric ( and spaces )
+    #   will be cleaned if an incorrect name is used
     def get_create_group( group_name )
       check_user_pass
       existing_group_id = get_group_id( group_name )
@@ -25,6 +28,9 @@ module Jangosmtp
       return existing_group_id
     end
     
+    # Get the id of a requested group
+    # group_name: group name that the user wants to get the id for, should only contain alphanumeric ( and spaces )
+    #   will be cleaned if an incorrect name is used
     def get_group_id( group_name )
       check_user_pass
       # First we need to clean the group_name since jangosmtp only allows alphanumeric characters
@@ -47,6 +53,9 @@ module Jangosmtp
       return existing_group_id
     end
     
+    # Create a group and return the successfull value
+    # group_name: group name that the user wants to get the id for, should only contain alphanumeric ( and spaces )
+    #   will be cleaned if an incorrect name is used
     def create_group( group_name )
       check_user_pass
       # First we need to clean the group_name since jangosmtp only allows alphanumeric characters
@@ -64,6 +73,18 @@ module Jangosmtp
       return new_group_id
     end
     
+    # Send an email and get/create a requested group
+    # group_name: group name that the user wants the email to be applied to, should only contain alphanumeric
+    #   ( and spaces ) will be cleaned if an incorrect name is used
+    # to_email: the single email address that the email will be sent to
+    # from_email: the email address that the email will be coming from
+    # from_name: the name that the email address will be coming from
+    # html: the html of the email message to be sent
+    #
+    # IMPORTANT: This function will attempt to get or create a group for each email that is sent. If you will
+    #   be sending a lot of emails to the same group I would recommend you create the group first and use
+    #   the send_email_with_group_id function since that takes a group_id and won't attempt to create the
+    #   group with each email that is sent
     def send_email( group_name, to_email, from_email, from_name, html )
       check_user_pass
       group_id = get_create_group( group_name )
@@ -72,6 +93,12 @@ module Jangosmtp
       end
     end
     
+    # Send an email using a pre-existing group
+    # group_id: the id of the group that this email will be applied to
+    # to_email: the single email address that the email will be sent to
+    # from_email: the email address that the email will be coming from
+    # from_name: the name that the email address will be coming from
+    # html: the html of the email message to be sent
     def send_email_with_group_id( group_id, to_email, from_email, from_name, html )
       check_user_pass
       # Send the email using Jango
@@ -90,12 +117,14 @@ module Jangosmtp
     end
     
     private
+    # Will verify that the username and password exist for each request
     def check_user_pass
       if @username.nil? || @password.nil?
         raise 'Jangosmtp username and password are required'
       end
     end
     
+    # Will attempt to post to the jangosmtp action requested using the options hash passed in
     def post_with_attempts( action, options )
       agent = Mechanize.new
       attempt = 0
@@ -114,6 +143,7 @@ module Jangosmtp
       return response
     end
     
+    # Get either the Rails logger or the a logger to STDOUT
     def logger
       if !Rails.nil?
         return Rails.logger
