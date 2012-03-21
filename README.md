@@ -1,6 +1,6 @@
 # Jangosmtp
 
-TODO: Write a gem description
+This gem will allow a user to easily incorporate jangosmtp into their existing rails project. This gem uses the jangosmtp api rather than the jangosmtp smtp relay since, according to the jangosmtp docs, the api is faster and more reliable than using the jangosmtp relay. Currently at our company we are only using the send and transaction group functions, but if you would like, feel free to make a request for more functions as well as forking this repo and submitting a new pull request. Please enjoy and I do apologize for not having any tests at this very moment.
 
 ## Installation
 
