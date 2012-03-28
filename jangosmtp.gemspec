@@ -7,8 +7,8 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Library for interfacing with JangoSMTP}
   gem.summary       = %q{Will encapsulate all the necessary api calls into an easy to use gem.}
   gem.homepage      = "https://github.com/jbrennon/jangosmtp"
-  
-  gem.add_dependency 'mechanize'
+
+  gem.add_dependency 'mechanize', '~> 2.3'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
