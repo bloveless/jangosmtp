@@ -1,5 +1,6 @@
 require 'jangosmtp/version'
 require 'mechanize'
+require 'xml_parser'
 
 module Jangosmtp
 
@@ -134,6 +135,7 @@ module Jangosmtp
       # Try max_attempts times before skipping
       while((attempt < max_attempts) && !response)
         begin
+          agent.pluggable_parser['text/xml'] = XmlParser
           response = agent.post( BASE_URL + action, options )
         rescue StandardError => e
           # If there was an error set success to false and try again in 3 seconds
